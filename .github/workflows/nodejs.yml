@@ -26,7 +26,7 @@ jobs:
         DIRECTORY_TO_LIST="/home/ubuntu"
 
         # List the contents of the directory on the EC2 instance
-        if ssh -o StrictHostKeyChecking=no { secrets.EC2_PUBLIC_DNS }} "ls -a $DIRECTORY_TO_LIST"; then
+        if ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_PUBLIC_DNS }} "ls -a $DIRECTORY_TO_LIST"; then
           echo "Directory listing succeeded, proceeding with the update script."
           
           # Execute the update script
