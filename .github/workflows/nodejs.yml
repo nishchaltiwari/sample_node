@@ -1,0 +1,32 @@
+name: Deploy on Commit
+
+on:
+  push:
+    branches:
+      - main  # Adjust to your branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Execute Bash script on EC2
+      id: ssh
+      run: |
+        set -e
+        if ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_DNS }} 'bash -s' < path/to/your-script.sh; then
+          echo "SSH command succeeded, sending notification to Slack"
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment succeeded on EC2 instance."}' ${{ secrets.SLACK_WEBHOOK_URL }}
+        else
+          echo "SSH command failed, sending notification to Slack"
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment failed on EC2 instance. Please check the logs for details."}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          exit 1
+        fi
