@@ -18,7 +18,7 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Execute Bash script on aws EC2 
+    - name: Execute Bash script on EC2 
       id: ssh
       run: |
         set -e
