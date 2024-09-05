@@ -22,7 +22,7 @@ jobs:
       id: ssh
       run: |
         set -e
-        if ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_DNS }} 'sudo bash -s' < /home/ubuntu/update.sh; then
+        if ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_DNS }} sudo bash < /home/ubuntu/update.sh; then
           echo "SSH command succeeded, sending notification to Slack"
           curl -X POST -H 'Content-type: application/json' --data '{"text":"Github update script initiated."}' ${{ secrets.SLACK_WEBHOOK_URL }}
         else
